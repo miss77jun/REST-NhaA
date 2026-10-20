@@ -1,0 +1,23 @@
+# ---- 大文件 / 可再生数据 ----
+4AU5.zip
+*.dcd
+*.rst
+*.oldpsf
+outputs/
+
+# ---- 缓存与临时 ----
+cuda_cache/
+__pycache__/
+*.pyc
+.dbg/
+*.log
+
+# ---- 编辑器 / 系统 ----
+.DS_Store
+*~
+
+# ---- CHARMM 运行日志 (可再生) ----
+*.out
+
+# ---- CHARMM-GUI 原始下载包 (工作副本在 4au5-aa-k300n/, 原包可凭 job ID 重下) ----
+4AU5/charmm-gui/charmm-gui-8425204688/
