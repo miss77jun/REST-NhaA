@@ -38,17 +38,6 @@
 - 参考端严格无额外局部偏置。
 - 最高端默认 `lambda_hot=0.8`，五残基局部有效温标为 437.5 K。
 
-### 1.3 标准 REST2 的实现情况
-
-标准 REST2 与 local-hot 共用**同一套体系构建**（`charmm-gui/4au5-aa-k300n/`，68,411 原子，无第二套拓扑/盒子），差异仅存在于脚本参数层。当前有两条运行标准 REST2 的路径：
-
-| 路径 | 位置 | 说明 |
-|---|---|---|
-| `versions/rest2_4au5_v4.3.py` | `local_heating_enabled: False`（默认关闭） | 纯标准 REST2 脚本；2026-09-19 的 50 ns 对照实验（`experiment_20260919_002619`，平均交换率 50.17%）由此产生 |
-| `versions/rest2_4au5_v4.4.py --no_local_heating` | CLI 开关 | 内部将 hot 原子集置空、`lambda_hot=1.0`，与 v4.3 数学等价且代码统一；**推荐用于后续对照** |
-
-已知缺口：`outputs/` 目录当前为空，v4.3 标准 REST2 对照（50 ns/副本）的 DCD、checkpoint 与 `scientific_report.json` 未随本部署保存，仅存在于历史记载中。若需复用其 walker 混合基线或做 local-hot vs 标准的轨迹级对照分析，须先向实验执行者取回该批产物。体系正确性验证方案见 `verification_plan_rest2_v44.md`。
-
 ## 2. 安装与运行环境
 
 建议使用独立 Conda 环境，并优先使用 CUDA GPU。脚本按 CUDA、OpenCL、CPU 的顺序选择平台，GPU 平台使用 mixed precision。
