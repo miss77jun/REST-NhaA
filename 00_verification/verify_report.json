@@ -1,0 +1,63 @@
+{
+  "L1": {
+    "n_atoms": {
+      "psf": 68411,
+      "pdb": 68411
+    },
+    "segid_counts": {
+      "PROA": 5899,
+      "MEMB": 19698,
+      "TIP3": 42648,
+      "PWAT": 90,
+      "SOD": 37,
+      "CLA": 39
+    },
+    "pdb_psf_name_mismatches": 0,
+    "pdb_psf_resid_mismatches_below_10000": 0,
+    "n_solute": 5899,
+    "hot_residues": {
+      "72": 20,
+      "167": 10,
+      "168": 19,
+      "344": 20,
+      "345": 19
+    },
+    "residue_offset": 9,
+    "box": [
+      82.4067792,
+      82.4067792,
+      109.362015
+    ]
+  },
+  "L2": {
+    "force_types": {
+      "HarmonicBondForce": 2,
+      "HarmonicAngleForce": 1,
+      "PeriodicTorsionForce": 1,
+      "CustomTorsionForce": 1,
+      "CMAPTorsionForce": 1,
+      "NonbondedForce": 1,
+      "CustomNonbondedForce": 1,
+      "CMMotionRemover": 1
+    },
+    "audit_lines": [
+      "  [CMAP] normal/hot/mixed torsions: 369/0/11",
+      "    bond: 91976/179/6",
+      "    angle: 62570/150/24",
+      "    periodic torsion: 86324/247/66",
+      "    custom torsion: 1199/4/12",
+      "    CMAP: 369/0/11",
+      "    nonbonded particle: 68323/88/0",
+      "    nonbonded exception: 184122/440/90",
+      "  [CMAP] normal/hot/mixed torsions: 369/0/11",
+      "    bond: 91976/179/6",
+      "    angle: 62570/150/24",
+      "    periodic torsion: 86324/247/66",
+      "    custom torsion: 1199/4/12",
+      "    CMAP: 369/0/11",
+      "    nonbonded particle: 68323/88/0",
+      "    nonbonded exception: 184122/440/90"
+    ]
+  },
+  "fail": []
+}
