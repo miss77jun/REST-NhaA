@@ -21,3 +21,6 @@ __pycache__/
 
 # ---- CHARMM-GUI 原始下载包 (工作副本在 4au5-aa-k300n/, 原包可凭 job ID 重下) ----
 4AU5/charmm-gui/charmm-gui-8425204688/
+
+# ---- 备份文件 (以 git 历史为准, 不入库) ----
+*.bak*
