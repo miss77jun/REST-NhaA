@@ -22,7 +22,7 @@ DCD_DIR = os.path.join(SYS, "outputs", "replica_stride100")
 RES_SEL = "segid PROA and (resid 344 or resid 345 or resid 167 or resid 168 or resid 72)"
 BB_NAMES = {"N", "CA", "C", "O", "OC1", "OC2", "OT1", "OT2", "OXT"}
 CA_SEL = "protein and name CA"
-T_REF, T_MAX, LAMBDA_HOT = 300.0, 350.0, 0.8
+T_REF, T_MAX, LAMBDA_HOT = 300.0, 350.0, 1.0  # 数据来自 v4.3 标准模式 (用户确认), 无 local-hot
 SKIP_SLOTS = [0]  # replica_0 在微信传输源头损坏 (bad CRC), 待学生重传后补算
 
 
