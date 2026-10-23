@@ -94,7 +94,7 @@ v3.3 更新内容 (2026-07-28):
 ======================================================================
 """
 
-__version__ = "4.4"
+__version__ = "4.4.1"
 __date__ = "2026-09-20"
 
 import os
@@ -593,6 +593,22 @@ def select_platform(preference, logger):
             continue
     logger.warning("No GPU platform found, using CPU")
     return openmm.Platform.getPlatformByName("CPU"), "CPU"
+
+
+def cuda_device_props(index, logger):
+    """[v4.4.1 multi-GPU] 按 CUDA_VISIBLE_DEVICES 轮转分配 CudaDeviceIndex。
+
+    v4.4 原版所有 Context 共享 platform 默认设备 (多卡申请也只用 device 0)。
+    本函数把副本轮转分布到全部可见设备上 (CudaDeviceIndex 是相对索引,
+    OpenMM 枚举设备时已遵循 CUDA_VISIBLE_DEVICES 掩码)。
+    单卡 / 无 CUDA 环境返回 None, 行为与 v4.4 完全一致。"""
+    vis = os.environ.get("CUDA_VISIBLE_DEVICES", "")
+    devices = [d.strip() for d in vis.split(",") if d.strip() != ""] if vis.strip() else []
+    if len(devices) <= 1:
+        return None
+    dev = str(index % len(devices))
+    logger.info(f"[v4.4.1 multi-GPU] Context #{index} -> CUDA device {dev}")
+    return {"CudaDeviceIndex": dev}
 
 
 def read_charmm_gui_box_info(boxinfo_str, logger):
@@ -2032,7 +2048,11 @@ def run_rest2(cfg, logger, restore_data=None):
             T_ref*unit.kelvin, cfg["friction"]/unit.picosecond, cfg["timestep"]*unit.femtoseconds
         )
         integ.setRandomNumberSeed(openmm_seeds[i])
-        ctx = openmm.Context(rep_sys, integ, platform)
+        props = cuda_device_props(i, logger)
+        if props is None:
+            ctx = openmm.Context(rep_sys, integ, platform)
+        else:
+            ctx = openmm.Context(rep_sys, integ, platform, props)
 
         if restore_data:
             pos = restore_data['positions_list'][i]
@@ -2090,7 +2110,11 @@ def run_rest2(cfg, logger, restore_data=None):
             T_ref*unit.kelvin, cfg["friction"]/unit.picosecond, cfg["timestep"]*unit.femtoseconds
         )
         npt_integ.setRandomNumberSeed(openmm_seeds[3 * n_rep + 1])
-        npt_ctx = openmm.Context(npt_sys, npt_integ, platform)
+        npt_props = cuda_device_props(0, logger)
+        if npt_props is None:
+            npt_ctx = openmm.Context(npt_sys, npt_integ, platform)
+        else:
+            npt_ctx = openmm.Context(npt_sys, npt_integ, platform, npt_props)
         npt_ctx.setPositions(state.getPositions())
         npt_ctx.setVelocities(state.getVelocities())
         npt_ctx.setPeriodicBoxVectors(*state.getPeriodicBoxVectors())
@@ -2155,7 +2179,11 @@ def run_rest2(cfg, logger, restore_data=None):
                     T_ref*unit.kelvin, cfg["friction"]/unit.picosecond, cfg["timestep"]*unit.femtoseconds
                 )
                 integ.setRandomNumberSeed(openmm_seeds[n_rep + i])
-                new_ctx = openmm.Context(rep_sys, integ, platform)
+                new_props = cuda_device_props(i, logger)
+                if new_props is None:
+                    new_ctx = openmm.Context(rep_sys, integ, platform)
+                else:
+                    new_ctx = openmm.Context(rep_sys, integ, platform, new_props)
                 new_ctx.setPositions(pos)
                 new_ctx.setVelocities(vel)
                 new_ctx.setPeriodicBoxVectors(*box)
